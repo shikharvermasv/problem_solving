@@ -1,4 +1,4 @@
-// class Solution {
+k// class Solution {
 // public:
 //     bool check(TreeNode* root){
 //       if(root == NULL){
@@ -18,7 +18,7 @@ now doing the compiler wala solution
 
 #include<bits/stdc++.h>
 using namespace std;
-bool hasOnlyOneChild(vector<int>bst , int n){
+bool check(vector<int>bst , int n){
     int first, last;
 
 	for (int i=0; i<n-1; i++)
@@ -45,7 +45,7 @@ int main(){
 		bst.push_back(a);
     }
 
-	if (hasOnlyOneChild(bst, n) == true )
+	if (check(bst, n) == true )
 		cout<<"Yes";
 	else
 		cout<<"No";
