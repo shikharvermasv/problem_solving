@@ -13,7 +13,7 @@ k// class Solution {
 //     }
 // }
 
-uper wala approach mene function let karke kara hai
+uper wala approach mene function assume karke kara hai
 now doing the compiler wala solution
 
 #include<bits/stdc++.h>
