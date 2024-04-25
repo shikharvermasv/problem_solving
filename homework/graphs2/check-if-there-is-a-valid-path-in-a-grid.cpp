@@ -1,65 +1,47 @@
 class Solution {
 public:
-    
-    bool dfs(vector<vector<int>>& grid, int i ,int j, int m, int n)
-    {
-        if(i == m-1 && j == n-1) return true;
-        
-        if(grid[i][j] == 0) return false;
-        
-        if(grid[i][j] == 1)
-        {
-            grid[i][j] = 0;
-            return ((j > 0 && (grid[i][j-1] == 4 || grid[i][j-1] == 6 || grid[i][j-1] == 1) && dfs(grid,i,j-1,m,n)) ||
-                    j < n-1 && (grid[i][j+1] == 3 || grid[i][j+1] == 5 || grid[i][j+1] == 1) && dfs(grid,i,j+1,m,n));
+    // teraversing all directions
+
+    vector<int> x{1,-1,0,0};
+    vector<int> y{0,0,1,-1};
+    // checking the boundary bounded
+    bool valid(int x,int y,int m,int n){
+        if(x>=0 && x<m && y>=0 && y<n)
+            return true;
+        return false;
+    }
+
+
+    bool dfs(vector<vector<int>>& grid , int i , int j , int m , int n , vector<vector<int>>& vis , unordered_map<int,vector<vector<int>>>& mp){
+        // reaches the destination return true
+        if(i == m-1 && j == n-1){
+            return true;
         }
-        else if(grid[i][j] == 2)
-        {
-            grid[i][j] = 0;
-            return ((i > 0 && (grid[i-1][j] == 3 || grid[i-1][j] == 4 || grid[i-1][j] == 2) && dfs(grid,i-1,j,m,n)) ||
-                    i < m-1 && (grid[i+1][j] == 5 || grid[i+1][j] == 6 || grid[i+1][j] == 2) && dfs(grid,i+1,j,m,n));
+        // marke visited
+        vis[i][j] = 1;
+        for(int k=0 ; k<4 ; k++){
+            if(valid(i+x[k] , j+y[k] , m , n) && vis[i+x[k]][j+y[k]] == 0){
+                int temp=grid[i][j];
+                for(int l=0;l<mp[temp][k].size();l++)
+                {
+                    if(mp[temp][k][l]==grid[i+x[k]][j+y[k]])
+                    {
+                        if(dfs(grid,i+x[k],j+y[k],m,n,vis,mp))
+                            return true;
+                    }
+                }
+            }
         }
-        else if(grid[i][j] == 3)
-        {
-            
-            grid[i][j] = 0;
-            return ((j > 0 && (grid[i][j-1] == 4 || grid[i][j-1] == 6 || grid[i][j-1] == 1) && dfs(grid,i,j-1,m,n)) ||
-                    i < m-1 && (grid[i+1][j] == 5 || grid[i+1][j] == 6 ||grid[i+1][j] == 2) && dfs(grid,i+1,j,m,n));
-        }
-        else if(grid[i][j] == 4)
-        {
-            
-            grid[i][j] = 0;
-            return ((j < n-1 && (grid[i][j+1] == 1 || grid[i][j+1] == 3 || grid[i][j+1] == 5) && dfs(grid,i,j+1,m,n)) ||
-                    i < m-1 && (grid[i+1][j] == 5 || grid[i+1][j] == 6 || grid[i+1][j] == 2) && dfs(grid,i+1,j,m,n));
-        }
-        else if(grid[i][j] == 5)
-        {
-            
-            grid[i][j] = 0;
-            return ((j > 0 && (grid[i][j-1] == 1 || grid[i][j-1] == 4 || grid[i][j-1] == 6) && dfs(grid,i,j-1,m,n)) ||
-                    i > 0 && (grid[i-1][j] == 3 || grid[i-1][j] == 4 || grid[i-1][j] == 2) && dfs(grid,i-1,j,m,n));
-        
-        }
-        else if(grid[i][j] == 6)
-        {
-            
-            grid[i][j] = 0;
-            return ((j < n-1 && (grid[i][j+1] == 1 || grid[i][j+1] == 3 || grid[i][j+1] == 5) && dfs(grid,i,j+1,m,n)) ||
-                    i > 0 && (grid[i-1][j] == 4 || grid[i-1][j] == 3 || grid[i-1][j] == 2) && dfs(grid,i-1,j,m,n));
-        
-        }
-        else
-        {
-            grid[i][j] = 0;    
-            return false;
-         }    
-    }    
-    
-    
+        return false;
+    }
     bool hasValidPath(vector<vector<int>>& grid) {
-        
-        return dfs(grid,0,0,grid.size(), grid[0].size());
-        
+        // mapping all the paths to each other according to the start and the end nodes
+        unordered_map<int,vector<vector<int>>> mp{{1,{{},{},{1,3,5},{1,4,6}}},
+        {2,{{2,5,6},{2,3,4},{},{}}},{3,{{2,5,6},{},{},{1,4,6}}},{4,{{2,5,6},{},{1,3,5},{}}},
+        {5,{{},{2,3,4},{},{1,4,6}}},{6,{{},{2,3,4},{1,3,5},{}}}};
+        int m =grid.size();
+        int n =grid[0].size();
+        vector<vector<int>> vis(m, vector<int>(n,0));
+        return dfs(grid , 0 , 0 , m , n ,vis , mp);
     }
 };
