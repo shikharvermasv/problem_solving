@@ -1,12 +1,11 @@
 int dx[8] = {1, -1, 0, 0, 1, -1, 1, -1};
 int dy[8] = {0, 0, 1, -1, 1, -1, -1, 1};
 
-bool isValid(int x, int y, int n, int m){
+bool valid(int x, int y, int n, int m){
     return x >= 0 && y >= 0 && x <= n && y <= m;
 }
 
 string Solution::solve(int a, int b, int n, int r, vector<int> &A, vector<int> &B) {
-    
     vector<vector<int>> vis(a+2, vector<int>(b+2, 0));
     vector<vector<int>> d(a+2, vector<int>(b+2, 1e9));
     
@@ -27,6 +26,9 @@ string Solution::solve(int a, int b, int n, int r, vector<int> &A, vector<int> &
     while(!q.empty()){
         
         auto [x, y] = q.front();
+        // auto temp = q.front();
+        // x = temp.first;
+        // y = temp.second;
         q.pop();
         
         if(x == a && y == b){
@@ -36,12 +38,11 @@ string Solution::solve(int a, int b, int n, int r, vector<int> &A, vector<int> &
         for(int i = 0; i < 8; ++i){
             int X = x + dx[i];
             int Y = y + dy[i];
-            if(isValid(X, Y, a, b) && !vis[X][Y]){
+            if( valid(X, Y, a, b) && !vis[X][Y]){
                 q.push({X, Y});
                 vis[X][Y] = 1;
             }
         }
     }
-   
     return "NO";
 }
